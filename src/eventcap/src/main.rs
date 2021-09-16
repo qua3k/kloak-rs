@@ -44,5 +44,5 @@ fn main() {
     };
 
     println!("Reading from {} {}", path, name);
-    print_input(device)
+    print_input(&device)
 }
