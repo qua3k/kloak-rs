@@ -1,6 +1,5 @@
 use evdev::Device;
 use eventcap::print_input;
-use nix::unistd::Uid;
 use std::process;
 
 fn usage() {
@@ -25,10 +24,6 @@ fn main() {
     }
 
     let path = &args[1];
-    
-    if !Uid::current().is_root() {
-        println!("You are not root! This may not work...")
-    }
 
     let device = match Device::open(path) {
         Ok(d) => d,

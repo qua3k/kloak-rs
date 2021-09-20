@@ -3,9 +3,15 @@
 kloak-rs is an alternative Rust implementation of [kloak](https://github.com/vmonaco/kloak).
 
 It features many security improvements over the C codebase, including:
-* Written in Rust, eliminating entire classes of vulnerabilities.
+
+* Written in Rust, eliminating classes of the most common vulnerabilities.
 * Makes use of libraries such as `evdev` to avoid having to access `uinput` directly.
 * Delays are securely generated with a ChaCha8 CSPRNG seeded by the kernel with `getrandom(2)`.
+
+## Prerequisites
+
+* `uinput` kernel module
+* Access to input devices, e.g. a user in the `input` group
 
 ## eventcap
 
