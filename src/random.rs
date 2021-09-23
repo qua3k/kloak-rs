@@ -1,4 +1,4 @@
-use rand::prelude::*;
+use rand::prelude::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 
 /// Generates numbers within a range with a ChaCha8 CSPRNG
