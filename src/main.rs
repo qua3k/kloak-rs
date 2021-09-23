@@ -16,5 +16,10 @@ fn main() {
         }
     };
 
-    emit_delay(device, max_delay, verbose)
+    loop {
+        if let Err(e) = emit_delay(&device, max_delay, verbose) {
+            eprintln!("fetching events failed: {}", e);
+            process::exit(1)
+        }
+    }
 }
