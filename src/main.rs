@@ -26,7 +26,7 @@ fn main() {
     */
 
     loop {
-        if let Err(e) = emit_delay(&device, max_delay, verbose) {
+        if let Err(e) = emit_delay(&mut device, max_delay, verbose) {
             eprintln!("fetching events failed: {}", e);
             process::exit(1)
         }

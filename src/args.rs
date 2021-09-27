@@ -2,7 +2,7 @@ use clap::{App, Arg};
 use std::process;
 
 /// List of command-line arguments the program takes
-pub fn get_args() -> (&str, &str, bool) {
+pub fn get_args() -> (String, u64, bool) {
     let matches = App::new("kloak-rs")
     .arg(
         Arg::with_name("input")
@@ -28,8 +28,8 @@ pub fn get_args() -> (&str, &str, bool) {
     .get_matches();
 
     let input = match matches.value_of("input") {
-        Some(i) => i,
-        None => "none"
+        Some(i) => i.to_string(),
+        None => "none".to_string()
     };
 
     let max_delay = match matches.value_of("delay") {
