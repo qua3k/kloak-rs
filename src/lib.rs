@@ -1,19 +1,12 @@
-use crate::random::random_between;
+use crate::{random::random_between, ev::{emit, new_delay}};
 use evdev::{Device, EventType, InputEvent, uinput::{VirtualDevice, VirtualDeviceBuilder}};
-use std::{process, thread::sleep, time::{Duration, SystemTime}};
+use std::{thread::sleep, time::{Duration, SystemTime}};
 
+mod ev;
 mod error;
 mod random;
 
 const DEFAULT_POLLING_INTERVAL_MS: u64 = 8;
-
-// Emit events to the virtual device
-fn emit(virtual_device: &mut VirtualDevice, ev: &[InputEvent]) {
-    if let Err(e) = virtual_device.emit(ev) {
-        eprintln!("could not write to device: {}", e);
-        process::exit(1)
-    }
-}
 
 /// Creates a virtual device and initializes it with keys of an existing physical device.
 pub fn init_uinput(device: &Device) -> error::Result<VirtualDevice> {
@@ -34,6 +27,7 @@ pub fn emit_delay(device: &mut Device, max_delay: u64, verbose: bool) -> error::
     let random_delay = random_between(0, max_delay);
 
     for ev in device.fetch_events()? {
+        let event = new_delay(ev.event_type(), ev.code(), ev.value(), random_delay);
         // TODO: evaluate the necessarity of sleeping
         sleep(Duration::from_millis(DEFAULT_POLLING_INTERVAL_MS));
 
@@ -43,11 +37,10 @@ pub fn emit_delay(device: &mut Device, max_delay: u64, verbose: bool) -> error::
         }
 
         match ev.value() {
-            0 => emit(&mut virtual_device, &[ev]),
+            0 => emit(&mut virtual_device, &[event]),
             1 => {
-                sleep(Duration::from_millis(random_delay));
                 // TODO: implement rescue keys
-                emit(&mut virtual_device, &[ev])
+                emit(&mut virtual_device, &[event])
             }
             _ => continue
         }
