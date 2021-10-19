@@ -1,11 +1,13 @@
+use rand::distributions::{Distribution, Uniform};
 use rand::prelude::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 
-/// Generates numbers within a range with a ChaCha8 CSPRNG
+/// Generate a value with a ChaCha8 CSPRNG within a uniform distribution between 0 and a max inclusive
 /// Seeded by getrandom(2), panics if getrandom(2) is unable to provide entropy
 fn random_at_most(max: u64) -> u64 {
     let mut rng = ChaCha8Rng::from_entropy();
-    rng.gen_range(0..max)
+    let between = Uniform::new_inclusive(0, max);
+    rng.sample(between)
 }
 
 /// Generate a random integer between a minimum and a maximum
